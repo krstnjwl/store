@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.store.model.Cart;
@@ -34,6 +35,18 @@ public class CartController {
         cartService.addToCart(buyer, itemId, amount);
         return ResponseEntity.ok(null);
     }
+    
+    @PutMapping("/addAmount/{itemNo}")
+    public ResponseEntity<Void> addAmount(@PathVariable Integer itemNo) {
+    	cartService.addAmount(itemNo);
+        return ResponseEntity.ok(null);
+    }
+    
+    @PutMapping("/reduceAmount/{itemNo}")
+    public ResponseEntity<Void> reduceAmount(@PathVariable Integer itemNo) {
+    	cartService.reduceAmount(itemNo);
+        return ResponseEntity.ok(null);
+    }
 
     @DeleteMapping("/removeFromCart/{itemNo}")
     public ResponseEntity<Void> removeFromCart(@PathVariable Integer itemNo) {
@@ -44,6 +57,11 @@ public class CartController {
     @DeleteMapping("/removeAllFromCart/{buyer}")
     public ResponseEntity<Void> removeAllFromCart(@PathVariable String buyer) {
         cartService.removeAllFromCart(buyer);
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok().build();
+    }
+    @CrossOrigin(origins = "http://localhost:5173")
+    @GetMapping("/cartNumItems/{buyer}")
+    public ResponseEntity<Integer> getCartNumItems(@PathVariable String buyer) {
+        return ResponseEntity.ok(cartService.getCart(buyer).size());
     }
 }

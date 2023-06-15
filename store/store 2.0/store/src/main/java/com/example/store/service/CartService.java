@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import com.example.store.model.Cart;
 import com.example.store.repository.CartRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+
 @Service
 public class CartService {
     @Autowired
@@ -31,12 +34,51 @@ public class CartService {
             return null;
         });
     }
+    
+    public Cart addAmount(Integer itemNo) {
+        Cart cartItem = cartRepo.findById(itemNo)
+                .orElseThrow(() -> new EntityNotFoundException("Item not found with No: " + itemNo));
+        Integer newAmount = cartItem.getAmount() + 1;
+        Integer newTotalCost = newAmount * cartItem.getPrice();
 
+        cartItem.setAmount(newAmount);
+        cartItem.setTotalCost(newTotalCost);
+
+        return cartRepo.save(cartItem);
+    }
+    
+    public Cart reduceAmount(Integer itemNo) {
+        Cart cartItem = cartRepo.findById(itemNo)
+                .orElseThrow(() -> new EntityNotFoundException("Item not found with No: " + itemNo));
+        Integer newAmount = cartItem.getAmount() - 1;
+        Integer newTotalCost = newAmount * cartItem.getPrice();
+
+        if (newAmount <= 0) {
+            cartRepo.deleteById(itemNo); // Delete the item from the repository
+            return null; // Return null to indicate the item was deleted
+        }
+
+        cartItem.setAmount(newAmount);
+        cartItem.setTotalCost(newTotalCost);
+
+        return cartRepo.save(cartItem);
+    }
+    @Transactional
     public void removeFromCart(Integer itemNo) {
         cartRepo.deleteById(itemNo);
     }
 
+    @Transactional
     public void removeAllFromCart(String buyer) {
         cartRepo.deleteByBuyerName(buyer);
+    }
+    @Transactional
+    public Integer getCartNumItems(String buyer) {
+        List<Cart> cartItems = getCart(buyer);
+        int totalItems = 0;
+        for (Cart cartItem : cartItems) {
+            totalItems += cartItem.getAmount();
+        }
+        return totalItems;
     }
 }
