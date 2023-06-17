@@ -53,6 +53,17 @@ CREATE TABLE sold (
 		PRIMARY KEY (transaction_no)
 );
 
+CREATE TABLE unverified (
+	username VARCHAR(255) NOT NULL,
+	first_name VARCHAR(255) NOT NULL,
+	last_name VARCHAR(255) NOT NULL,
+	email VARCHAR(255) NOT NULL,
+	pword VARCHAR(255) NOT NULL,
+	acc_type INTEGER NOT NULL,
+	otp INTEGER NOT NULL,
+		PRIMARY KEY (username)
+);
+
 CREATE OR REPLACE FUNCTION ADDTOCART(buyer VARCHAR(255), itemid INTEGER, amt INTEGER)
 RETURNS VOID AS $$
 	DECLARE
@@ -116,33 +127,33 @@ $$ LANGUAGE plpgsql;
 
 INSERT INTO items (item_id, picture, item_name, category, seller_name, description, price, stocks)
 VALUES
-	(01, 'razerBlade14.jpg', 'Razer Blade 14', 'Laptop', 'Razer', '14-inch Gaming Laptop with AMD Ryzen™ 6900HX', 1799.99, 40),
-	(02, 'razerBlade15.jpg', 'Razer Blade 15', 'Laptop', 'Razer','NVIDIA® GeForce RTX™ 40 Series GPUs, 13th Gen Intel® Core™ i7 Processor (14-Core)', 1999.99, 30),
-	(03, 'razerBlade16.jpg', 'Razer Blade 16', 'Laptop', 'Razer','NVIDIA® GeForce RTX™ 40 Series 16” Laptop with 13th Gen Intel® Core™ i9 Processor (24-Core)', 2699.99, 50),
-	(04, 'razerBlade17.jpg', 'Razer Blade 17', 'Laptop', 'Razer','NVIDIA® GeForce RTX™ 30 Series 17” Laptop with 12th Gen Intel® Core™ i9 Processor (14-Core)', 2299.99, 40),
-	(05, 'razerBlade18.jpg', 'Razer Blade 18', 'Laptop', 'Razer','NVIDIA® GeForce RTX™ 40 Series 18” Laptop with 13th Gen Intel® Core™ i9 Processor (24-Core)', 2899.99, 50),
-	(06, 'razerBasiliskV3.jpg', 'Razer Basilisk V3', 'Mouse', 'Razer','Customizable Wireless Gaming Mouse with Razer HyperScroll Tilt Wheel', 159.99, 30),
-	(07, 'razerDeathAdderV3.jpg', 'Razer DeathAdder V3', 'Mouse', 'Razer','Ultra-lightweight Ergonomic Esports Mouse', 69.99, 40),
-	(08, 'razerNagaV2Pro.jpg', 'Razer Naga V2 Pro', 'Mouse', 'Razer','MMO Wireless Gaming Mouse', 179.99, 50),
-	(09, 'razerViperMiniSignatureEdition.jpg', 'Razer Viper Mini Signature Edition', 'Mouse', 'Razer','The Best Lightweight Performance Gaming Mouse', 279.99, 30),
-	(10, 'razerBlackWidowV3Black.jpg', 'Razer BlackWidow V3 Black', 'Keyboard', 'Razer','Mechanical Gaming Keyboard with Razer Chroma RGB', 179.99, 40),
-	(11, 'razerBlackWidowV3Quartz.jpg', 'Razer BlackWidow V3 Quartz', 'Keyboard', 'Razer','Mechanical Gaming Keyboard with Razer Chroma RGB', 179.99, 30),
-	(12, 'razerBlackWidowV3BAPE.jpg', 'Razer BlackWidow V3 BAPE', 'Keyboard', 'Razer','Mechanical Gaming Keyboard with Razer Chroma RGB', 179.99, 50),
-	(13, 'razerBlackWidowV3EVISU.jpg', 'Razer BlackWidow V3 EVISU', 'Keyboard', 'Razer','Mechanical Gaming Keyboard with Razer Chroma RGB', 179.99, 40),
-	(14, 'razerBlackWidowV3HaloInfinite.jpg', 'Razer BlackWidow V3 Halo Infinite', 'Keyboard','Razer', 'Mechanical Gaming Keyboard with Razer Chroma RGB', 179.99, 50),
-	(15, 'razerBlackWidowV3Roblox.jpg', 'Razer BlackWidow V3 Robox', 'Keyboard','Razer', 'Mechanical Gaming Keyboard with Razer Chroma RGB', 179.99, 30),
-	(16, 'razerDeathStalkerV2.jpg', 'Razer DeathStalker V2', 'Keyboard','Razer', 'Low-Profile RGB Optical Gaming Keyboard', 199.99, 40),
-	(17, 'razerHuntsmanV2.jpg', 'Razer Huntsman V2', 'Keyboard','Razer', 'Optical Gaming Keyboard with Near-zero Input Latency', 189.99, 30),
-	(18, 'razerNommoV2.jpg', 'Razer Nommo V2', 'Audio','Razer', 'Full-Range 2.1 PC Gaming Speakers with Wireless Subwoofer', 449.99, 50),
-	(19, 'razerBlacksharkV2Pro.jpg', 'Razer Blackshark V2 Pro', 'Audio','Razer', 'Wireless Esports Headset', 199.99, 40),
-	(20, 'razerBarracudaPro.jpg', 'Razer Barracuda Pro', 'Audio', 'Razer', 'Wireless Gaming Headset with Hybrid ANC', 249.99, 50),
-	(21, 'razerKrakenV3.jpg', 'Razer Kraken V3', 'Audio','Razer', 'Wireless Gaming Headset with Haptic Technology', 199.99, 30),
-	(22, 'razerWolverineV2.jpg', 'Razer Wolverine V2', 'Controller','Razer', 'Wired Gaming Controller for Xbox Series X', 99.99, 40),
-	(23, 'razerKishiV2foriPhone.jpg', 'Razer Kishi V2 for iPhone', 'Controller','Razer', 'Universal Mobile Gaming Controller for iPhone', 99.99, 30),
-	(24, 'razerKishiV2forAndroid.jpg', 'Razer Kishi V2 for Android', 'Controller','Razer', 'Universal Mobile Gaming Controller for Android', 99.99, 50),
-	(25, 'razerChargingPadChroma.jpg', 'Razer Charging Pad Chroma', 'Accessories','Razer', '10W Fast Wireless Charger with Razer Chroma RGB', 59.99, 40),
-	(26, 'razerPhoneCoolerChroma.jpg', 'Razer Phone Cooler Chroma', 'Accessories','Razer', 'Smartphone Cooling Fan with Razer Chroma™ RGB', 59.99, 30),
-	(27, 'razerArctechProforiPhone13Pro.jpg', 'Razer Arctech Pro for iPhone 13 Pro', 'Accessories','Razer', 'Protective Smartphone Case with Thermaphene™ Cooling Technology', 44.99, 50);
+	(01, 'razerBlade14.jpg', 'Razer Blade 14', 'Laptop', 'Razer Seller', '14-inch Gaming Laptop with AMD Ryzen™ 6900HX', 1799.99, 40),
+	(02, 'razerBlade15.jpg', 'Razer Blade 15', 'Laptop', 'Razer Seller','NVIDIA® GeForce RTX™ 40 Series GPUs, 13th Gen Intel® Core™ i7 Processor (14-Core)', 1999.99, 30),
+	(03, 'razerBlade16.jpg', 'Razer Blade 16', 'Laptop', 'Razer Seller','NVIDIA® GeForce RTX™ 40 Series 16” Laptop with 13th Gen Intel® Core™ i9 Processor (24-Core)', 2699.99, 50),
+	(04, 'razerBlade17.jpg', 'Razer Blade 17', 'Laptop', 'Razer Seller','NVIDIA® GeForce RTX™ 30 Series 17” Laptop with 12th Gen Intel® Core™ i9 Processor (14-Core)', 2299.99, 40),
+	(05, 'razerBlade18.jpg', 'Razer Blade 18', 'Laptop', 'Razer Seller','NVIDIA® GeForce RTX™ 40 Series 18” Laptop with 13th Gen Intel® Core™ i9 Processor (24-Core)', 2899.99, 50),
+	(06, 'razerBasiliskV3.jpg', 'Razer Basilisk V3', 'Mouse', 'Razer Seller','Customizable Wireless Gaming Mouse with Razer HyperScroll Tilt Wheel', 159.99, 30),
+	(07, 'razerDeathAdderV3.jpg', 'Razer DeathAdder V3', 'Mouse', 'Razer Seller','Ultra-lightweight Ergonomic Esports Mouse', 69.99, 40),
+	(08, 'razerNagaV2Pro.jpg', 'Razer Naga V2 Pro', 'Mouse', 'Razer Seller','MMO Wireless Gaming Mouse', 179.99, 50),
+	(09, 'razerViperMiniSignatureEdition.jpg', 'Razer Viper Mini Signature Edition', 'Mouse', 'Razer Seller','The Best Lightweight Performance Gaming Mouse', 279.99, 30),
+	(10, 'razerBlackWidowV3Black.jpg', 'Razer BlackWidow V3 Black', 'Keyboard', 'Razer Reseller','Mechanical Gaming Keyboard with Razer Chroma RGB', 179.99, 40),
+	(11, 'razerBlackWidowV3Quartz.jpg', 'Razer BlackWidow V3 Quartz', 'Keyboard', 'Razer Reseller','Mechanical Gaming Keyboard with Razer Chroma RGB', 179.99, 30),
+	(12, 'razerBlackWidowV3BAPE.jpg', 'Razer BlackWidow V3 BAPE', 'Keyboard', 'Razer Reseller','Mechanical Gaming Keyboard with Razer Chroma RGB', 179.99, 50),
+	(13, 'razerBlackWidowV3EVISU.jpg', 'Razer BlackWidow V3 EVISU', 'Keyboard', 'Razer Reseller','Mechanical Gaming Keyboard with Razer Chroma RGB', 179.99, 40),
+	(14, 'razerBlackWidowV3HaloInfinite.jpg', 'Razer BlackWidow V3 Halo Infinite', 'Keyboard','Razer Reseller', 'Mechanical Gaming Keyboard with Razer Chroma RGB', 179.99, 50),
+	(15, 'razerBlackWidowV3Roblox.jpg', 'Razer BlackWidow V3 Robox', 'Keyboard','Razer Reseller', 'Mechanical Gaming Keyboard with Razer Chroma RGB', 179.99, 30),
+	(16, 'razerDeathStalkerV2.jpg', 'Razer DeathStalker V2', 'Keyboard','Razer Reseller', 'Low-Profile RGB Optical Gaming Keyboard', 199.99, 40),
+	(17, 'razerHuntsmanV2.jpg', 'Razer Huntsman V2', 'Keyboard','Razer Reseller', 'Optical Gaming Keyboard with Near-zero Input Latency', 189.99, 30),
+	(18, 'razerNommoV2.jpg', 'Razer Nommo V2', 'Audio','Razer Reseller', 'Full-Range 2.1 PC Gaming Speakers with Wireless Subwoofer', 449.99, 50),
+	(19, 'razerBlacksharkV2Pro.jpg', 'Razer Blackshark V2 Pro', 'Audio','Razer Reseller', 'Wireless Esports Headset', 199.99, 40),
+	(20, 'razerBarracudaPro.jpg', 'Razer Barracuda Pro', 'Audio', 'Razer Reseller', 'Wireless Gaming Headset with Hybrid ANC', 249.99, 50),
+	(21, 'razerKrakenV3.jpg', 'Razer Kraken V3', 'Audio','Razer Reseller', 'Wireless Gaming Headset with Haptic Technology', 199.99, 30),
+	(22, 'razerWolverineV2.jpg', 'Razer Wolverine V2', 'Controller','Razer Reseller', 'Wired Gaming Controller for Xbox Series X', 99.99, 40),
+	(23, 'razerKishiV2foriPhone.jpg', 'Razer Kishi V2 for iPhone', 'Controller','Razer Seller', 'Universal Mobile Gaming Controller for iPhone', 99.99, 30),
+	(24, 'razerKishiV2forAndroid.jpg', 'Razer Kishi V2 for Android', 'Controller','Razer Seller', 'Universal Mobile Gaming Controller for Android', 99.99, 50),
+	(25, 'razerChargingPadChroma.jpg', 'Razer Charging Pad Chroma', 'Accessories','Razer Seller', '10W Fast Wireless Charger with Razer Chroma RGB', 59.99, 40),
+	(26, 'razerPhoneCoolerChroma.jpg', 'Razer Phone Cooler Chroma', 'Accessories','Razer Seller', 'Smartphone Cooling Fan with Razer Chroma™ RGB', 59.99, 30),
+	(27, 'razerArctechProforiPhone13Pro.jpg', 'Razer Arctech Pro for iPhone 13 Pro', 'Accessories','Razer Reseller', 'Protective Smartphone Case with Thermaphene™ Cooling Technology', 44.99, 50);
 
 
 SELECT * FROM items;
