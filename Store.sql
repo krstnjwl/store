@@ -49,6 +49,9 @@ CREATE TABLE sold (
 	transaction_cost INTEGER NOT NULL,
 	payment_method VARCHAR(255) NOT NULL,
 	address VARCHAR(255) NOT NULL,
+	checkout_date DATE NOT NULL,
+	expected_delivery_date DATE NOT NULL,
+	date_delivered DATE,
 	order_status VARCHAR(255) NOT NULL,
 		PRIMARY KEY (transaction_no)
 );
