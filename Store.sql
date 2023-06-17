@@ -104,20 +104,23 @@ RETURNS VOID AS $$
 	END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION CHECKOUT(buyer VARCHAR(255), payment VARCHAR(255), address VARCHAR(255))
+CREATE OR REPLACE FUNCTION CHECKOUT(buyer VARCHAR(255), address VARCHAR(255), payment VARCHAR(255))
 RETURNS VOID AS $$
 	DECLARE
 		cart_row cart%ROWTYPE;
 		item_row items%ROWTYPE;
+		expected DATE;
 	BEGIN
+		expected := CURRENT_DATE + MAKE_INTERVAL(days => (random() * (5 - 1 + 1))::integer);
+		
 		FOR cart_row IN SELECT * FROM cart WHERE buyer_name = buyer LOOP
 			SELECT * INTO item_row FROM items WHERE item_id = cart_row.item_id;
 
 			IF cart_row.amount <= item_row.stocks THEN
 				UPDATE items SET stocks = stocks - cart_row.amount WHERE item_id = cart_row.item_id;
-
-				INSERT INTO sold(buyer_name, item_id, item_name, category, seller_name, price, amount, transaction_cost, payment_method, address, order_status)
-				VALUES (cart_row.buyer_name, cart_row.item_id, cart_row.item_name, cart_row.category, cart_row.seller_name, cart_row.price, cart_row.amount, cart_row.total_cost, payment, address, 'Preparing order');
+				
+				INSERT INTO sold(buyer_name, item_id, item_name, category, seller_name, price, amount, transaction_cost, payment_method, address, checkout_date, expected_delivery_date, order_status)
+				VALUES (cart_row.buyer_name, cart_row.item_id, cart_row.item_name, cart_row.category, cart_row.seller_name, cart_row.price, cart_row.amount, cart_row.total_cost, payment, address, CURRENT_DATE, expected, 'Processing order');
 
 				DELETE FROM cart WHERE item_no = cart_row.item_no;
 			END IF;
