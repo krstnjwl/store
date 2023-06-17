@@ -23,7 +23,7 @@ public class UserController {
     public ResponseEntity<String> addUser(@RequestBody User user) {
         return ResponseEntity.ok(userService.addUser(user));
     }
-    
+	@CrossOrigin(origins = "http://localhost:5173")
     @GetMapping("/verify")
     public ResponseEntity<String> verifyUser(@RequestParam("email") String email,
             								@RequestParam("otp") Integer otp) {
